@@ -20,6 +20,16 @@
           </ul>
         </li>
 
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+           Posts
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item {{ request()->is('posts') ? 'active' : '' }}"  href= {{ route('posts.index') }}>List</a></li>
+            <li><a class="dropdown-item {{ request()->is('posts/create') ? 'active' : '' }}"  href= {{ route('posts.create') }}>New post</a></li>
+          </ul>
+        </li>
+
       </ul>
       
     </div>

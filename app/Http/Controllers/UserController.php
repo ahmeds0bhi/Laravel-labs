@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use  App\Models\User;
+use App\Models\Post;
 
 use Illuminate\Http\Request;
+
+
 
 
 
@@ -15,7 +18,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $users = User::withCount('posts')->paginate(10);
         return view('users.index', ['users' => $users]);
     }
 
@@ -32,7 +35,18 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        return '<p>Store a newly created resource in storage</p>';
+        // validation
+        $request->validate([
+            'name' => 'required|string|max:100',
+            'email' => 'required|email'
+        ]);
+
+        // storing
+        User::create([
+            'name' =>  $request->name,
+            'email' => $request->email,
+        ]);
+        return redirect()->route('users.index');
     }
 
     /**
@@ -41,8 +55,15 @@ class UserController extends Controller
 
     public function show(string $id)
     {
+
+        $posts = User::find($id)->posts()->paginate(10);
         $user = User::find($id);
-        return view('users.show', ['user' => $user]);
+
+
+        return view('users.show', [
+            'user' => $user,
+            'posts'=>$posts
+        ]);
     }
 
 
@@ -60,7 +81,20 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        return view('users.update', ['id' => $id]); // no view for update or delete
+        // validation
+        $request->validate([
+            'name' => 'required|string|max:100',
+            'email' => 'required|email'
+        ]);
+
+        // updating
+        User::find($id)->update([
+            'name' => $request->name,
+            'email' => $request->email,
+        ]);
+
+
+        return redirect()->route('users.index');
     }
 
     /**
@@ -68,6 +102,7 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        return view('users.destroy', ['id' => $id]);
+        User::find($id)->delete();
+        return redirect()->route('users.index');
     }
 }
