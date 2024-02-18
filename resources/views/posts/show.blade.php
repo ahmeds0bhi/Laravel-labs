@@ -3,6 +3,25 @@
 @section('title', 'blog')
 
 @section('content')
+
+@isset($post->image)
+{{-- <div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <img src= "{{ Storage::disk()->url($post->image) }}"  class="img-fluid" > 
+        </div>
+</div>
+</div> --}}
+
+<div class="card" style="width: 18rem;">
+    <img src="{{ Storage::disk()->url($post->image) }}" class="card-img-top" alt="...">
+    <div class="card-body">
+      <h5 class="card-title">{{$post->title}}</h5>
+    </div>
+  </div>
+
+
+@endisset
 <table class="table">
     <thead>
         <tr >
@@ -29,4 +48,6 @@
     </tr>
 </tbody>
 </table>
+
+
 @endsection

@@ -14,7 +14,7 @@
     
     </div>
     
-    <div class="form-group">
+    {{-- <div class="form-group">
       <label for="user_id">Choose a publisher</label>
 
       <select class="form-control w-50" id="user_id" name="user_id">
@@ -22,7 +22,12 @@
           <option value="{{ $user->id }}">{{ $user->name }}</option>
           @endforeach
       </select>
-  </div>
+  </div> --}}
+
+  <div class="col-sm-3 mt-4">
+    <input type="text" name="user_id" value="{{ $authUser->id }}" hidden >
+    <h4>Author: {{ $authUser->name }}</h4>
+</div>
 
     <div class="mb-4 mt-4">
     <label for ="body">Post body </label>

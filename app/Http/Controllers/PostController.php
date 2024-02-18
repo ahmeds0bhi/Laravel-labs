@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PostCreated;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Str;
 
@@ -27,9 +29,11 @@ class PostController extends Controller
      */
     public function create()
     {
+        $AunthenticatedUser = Auth::user();
         $users = User::all();
         return view('posts.create', [
-            'users' => $users
+            'users' => $users,
+            'authUser' => $AunthenticatedUser,
         ]);
     }
 
@@ -38,18 +42,21 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $slug = Str::slug($request->title);
 
+        $data = $request->all();
+        // validaton
 
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
+            $path = $request->file('image')->store('posts', 'public');
+            $data['image'] = $path;
+        }
         // storing
-        Post::create([
-            'title' =>  $request->title,
-            'body' => $request->body,
-            'slug' => $slug,
-            'user_id' => $request->user_id
+        $data['slug'] = Str::slug($data['title']);
+        $post = Post::create($data);
 
-        ]);
+        event(new \App\Events\PostCreated($post)); // add event post_count
         return redirect()->route('posts.index');
+
     }
 
     /**
@@ -70,13 +77,25 @@ class PostController extends Controller
     {
 
 
-        $post = Post::with('user')->findOrFail($id);
-        $users = User::all();
+        // $post = Post::with('user')->findOrFail($id);
 
-        return view('posts.edit', [
-            'post' => $post,
-            'users' => $users
-        ]);
+        $post = Post::where('id', $id)->first();
+        $user = User::find($post->user_id);
+        $user_id = $post->user_id;
+
+        $AunthenticatedUser = Auth::user();
+
+
+
+        if ($AunthenticatedUser->id != $user_id) {
+            return redirect()->route('posts.index')->with('message', 'You are not allowed to edit this post');;
+        } else {
+            return view('posts.edit', [
+                'post' => $post,
+                'user' => $user,
+                'authUser' => $AunthenticatedUser
+            ]);
+        }
     }
 
     /**

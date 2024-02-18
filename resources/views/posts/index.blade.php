@@ -19,7 +19,8 @@
             <th scope="col">Title</th>
             <th scope="col">Body</th>
             <th scope="col">Published_at</th>
-            <td> Publisher </td>
+            <th> Publisher </th>
+            <th> Image </th>
             <th scope="col">Action</th>
         </tr>
     </thead>
@@ -32,6 +33,12 @@
         <td> {{$post->body}} </td>
         <td> {{$post->published_at}} </td>
         <td> {{ $post->user->name }} </td>
+        <td> 
+            @isset($post->image)
+            <img src= "{{ Storage::disk()->url($post->image) }}" style="width: 50" class="img-thumbnail"> 
+            @endisset
+        
+        </td>
         <td>   
             <a href="{{ route('posts.edit', ['id'=>$post['id']], false) }}" class="btn btn-sm btn-secondary">Edit</a>
 

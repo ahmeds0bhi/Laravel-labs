@@ -13,7 +13,8 @@ class Post extends Model
         'title',
         'body',
         'slug',
-        'user_id'
+        'user_id',
+        'image'
         
     ];
 

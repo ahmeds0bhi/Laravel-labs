@@ -16,7 +16,7 @@
             <th scope="col">ID</th>
             <th scope="col">Name</th>
             <th scope="col">Email</th>
-            <th scope="col">NO. Posts</th>
+            <th scope="col">Post counts</th>
             <th scope="col">Actions</th>
         </tr>
     </thead>
@@ -27,7 +27,7 @@
         <td>{{$user->id}}</td>
         <td> <a href="{{ route('users.show', ['id'=>$user['id']], false) }}"> {{$user->name}} </a> </td>
         <td> {{$user->email}} </td>
-        <td>{{ $user['posts_count'] }}</td>
+        <td>{{ $user->posts_count }}</td>
         <td>   
             <a href="{{ route('users.edit', ['id'=>$user['id']], false) }}" class="btn btn-sm btn-secondary">Edit</a>
 
